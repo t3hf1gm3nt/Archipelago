@@ -16,9 +16,9 @@ class AssembleCustomizableChoices(AssembleOptions):
         return cast(AssembleCustomizableChoices, cls)
 
 
-class RandomGroupsChoice(Choice, metaclass=AssembleCustomizableChoices):
+class MysteryGroupsChoice(Choice, metaclass=AssembleCustomizableChoices):
     extra_options: Optional[Set[str]]
-    random_groups: Dict[str, List[str]]
+    mystery_groups: Dict[str, List[str]]
 
     @classmethod
     def get_option_name(cls, value: int) -> str:
@@ -30,10 +30,10 @@ class RandomGroupsChoice(Choice, metaclass=AssembleCustomizableChoices):
     @classmethod
     def from_text(cls, text: str) -> Choice:
         key: str = text.lower()
-        if key == "random":
-            text = random.choice([o for o in cls.options if o not in cls.random_groups])
-        elif key in cls.random_groups:
-            text = random.choice(cls.random_groups[key])
+        if key == "mystery":
+            text = random.choice([o for o in cls.options if o not in cls.mystery_groups])
+        elif key in cls.mystery_groups:
+            text = random.choice(cls.mystery_groups[key])
         return super().from_text(text)
 
 
@@ -90,17 +90,17 @@ class BlueChestCount(Range):
     default = 25
 
 
-class Boss(RandomGroupsChoice):
+class Boss(MysteryGroupsChoice):
     """Which boss to fight on the final floor.
 
     Supported values:
     lizard_man, big_catfish, regal_goblin, follower_x2, camu, tarantula, pierre, daniele, gades_a, mummy_x4, troll_x3,
     gades_b, idura_a, lion_x2, idura_b, idura_c, rogue_flower, soldier_x4, gargoyle_x4, venge_ghost, white_dragon_x3,
     fire_dragon, ghost_ship, tank, gades_c, amon, erim, daos, egg_dragon, master
-    random-low — select a random regular boss, from lizard_man to troll_x3
-    random-middle — select a random regular boss, from idura_a to gargoyle_x4
-    random-high — select a random regular boss, from venge_ghost to tank
-    random-sinistral — select a random Sinistral boss
+    mystery-low — select a random regular boss, from lizard_man to troll_x3
+    mystery-middle — select a random regular boss, from idura_a to gargoyle_x4
+    mystery-high — select a random regular boss, from venge_ghost to tank
+    mystery-sinistral — select a random Sinistral boss
     Default value: master (same as in an unmodified game)
     """
 
@@ -145,14 +145,14 @@ class Boss(RandomGroupsChoice):
     option_master = 0x26
     default = option_master
 
-    random_groups = {
-        "random-low": ["lizard_man", "big_catfish", "regal_goblin", "follower_x2", "camu", "tarantula", "pierre",
-                       "daniele", "mummy_x4", "troll_x3"],
-        "random-middle": ["idura_a", "lion_x2", "idura_b", "idura_c", "rogue_flower", "soldier_x4", "gargoyle_x4"],
-        "random-high": ["venge_ghost", "white_dragon_x3", "fire_dragon", "ghost_ship", "tank"],
-        "random-sinistral": ["gades_c", "amon", "erim", "daos"],
+    mystery_groups = {
+        "mystery-low": ["lizard_man", "big_catfish", "regal_goblin", "follower_x2", "camu", "tarantula", "pierre",
+                        "daniele", "mummy_x4", "troll_x3"],
+        "mystery-middle": ["idura_a", "lion_x2", "idura_b", "idura_c", "rogue_flower", "soldier_x4", "gargoyle_x4"],
+        "mystery-high": ["venge_ghost", "white_dragon_x3", "fire_dragon", "ghost_ship", "tank"],
+        "mystery-sinistral": ["gades_c", "amon", "erim", "daos"],
     }
-    extra_options = frozenset(random_groups)
+    extra_options = frozenset(mystery_groups)
 
     @property
     def flag(self) -> int:
@@ -261,7 +261,7 @@ class DefaultCapsule(Choice):
     default = option_jelze
 
 
-class DefaultParty(RandomGroupsChoice, TextChoice):
+class DefaultParty(MysteryGroupsChoice, TextChoice):
     """Preselect the party lineup.
 
     (Only has an effect if shuffle_party_members is set to false.)
@@ -270,31 +270,31 @@ class DefaultParty(RandomGroupsChoice, TextChoice):
     M — Maxim
     DGMA — Dekar, Guy, Maxim, and Arty
     MSTL — Maxim, Selan, Tia, and Lexis
-    random-2p — a random 2-person party
-    random-3p — a random 3-person party
-    random-4p — a random 4-person party
+    mystery-2p — a random 2-person party
+    mystery-3p — a random 3-person party
+    mystery-4p — a random 4-person party
     Default value: M
     """
 
     display_name = "Default party lineup"
     default = "M"
 
-    random_groups = {
-        "random-2p": ["M" + "".join(p) for p in combinations("ADGLST", 1)],
-        "random-3p": ["M" + "".join(p) for p in combinations("ADGLST", 2)],
-        "random-4p": ["M" + "".join(p) for p in combinations("ADGLST", 3)],
+    mystery_groups = {
+        "mystery-2p": ["M" + "".join(p) for p in combinations("ADGLST", 1)],
+        "mystery-3p": ["M" + "".join(p) for p in combinations("ADGLST", 2)],
+        "mystery-4p": ["M" + "".join(p) for p in combinations("ADGLST", 3)],
     }
-    vars().update({f"option_{party}": party for party in (*random_groups, "M", *chain(*random_groups.values()))})
-    _valid_sorted_parties: List[List[str]] = [sorted(party) for party in ("M", *chain(*random_groups.values()))]
+    vars().update({f"option_{party}": party for party in (*mystery_groups, "M", *chain(*mystery_groups.values()))})
+    _valid_sorted_parties: List[List[str]] = [sorted(party) for party in ("M", *chain(*mystery_groups.values()))]
     _members_to_bytes: bytes = bytes.maketrans(b"MSGATDL", bytes(range(7)))
 
     def verify(self, *args, **kwargs) -> None:
-        if str(self.value).lower() in self.random_groups:
+        if str(self.value).lower() in self.mystery_groups:
             return
         if sorted(str(self.value).upper()) in self._valid_sorted_parties:
             return
         raise ValueError(f"Could not find option '{self.value}' for '{self.__class__.__name__}', known options are:\n"
-                         f"{', '.join(self.random_groups)}, {', '.join(('M', *chain(*self.random_groups.values())))} "
+                         f"{', '.join(self.mystery_groups)}, {', '.join(('M', *chain(*self.mystery_groups.values())))} "
                          "as well as all permutations of these.")
 
     @staticmethod

@@ -8,7 +8,7 @@ import bsdiff4
 
 import Utils
 from BaseClasses import Item, Location, Region, Entrance, MultiWorld, ItemClassification, Tutorial
-from .ItemPool import generate_itempool, starting_weapons, dangerous_weapon_locations
+from .ItemPool import generate_itempool, possible_starting_weapons, dangerous_weapon_locations
 from .Items import item_table, item_prices, item_game_ids
 from .Locations import location_table, level_locations, major_locations, shop_locations, all_level_locations, \
     standard_level_locations, shop_price_location_ids, secret_money_ids, location_ids, food_locations
@@ -51,7 +51,7 @@ class TLoZWorld(World):
     location_name_to_id = location_table
 
     item_name_groups = {
-        'weapons': starting_weapons,
+        'weapons': possible_starting_weapons,
         'swords': {
             "Sword", "White Sword", "Magical Sword"
         },

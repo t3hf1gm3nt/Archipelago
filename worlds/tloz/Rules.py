@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from ..generic.Rules import add_rule
 from .Locations import food_locations, shop_locations
 from .ItemPool import dangerous_weapon_locations
-from .Options import StartingPosition
+from .Options import StartingWeaponPosition
 
 if TYPE_CHECKING:
     from . import TLoZWorld
@@ -23,7 +23,7 @@ def set_rules(tloz_world: "TLoZWorld"):
     # No dungeons without weapons except for the dangerous weapon locations if we're dangerous, no unsafe dungeons
     for i, level in enumerate(tloz_world.levels[1:10]):
         for location in level.locations:
-            if world.StartingPosition[player] < StartingPosition.option_dangerous \
+            if world.StartingWeaponPosition[player] < StartingWeaponPosition.option_dangerous \
                     or location.name not in dangerous_weapon_locations:
                 add_rule(world.get_location(location.name, player),
                          lambda state: state.has_group("weapons", player))

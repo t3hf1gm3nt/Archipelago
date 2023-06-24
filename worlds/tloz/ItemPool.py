@@ -1,6 +1,7 @@
 from BaseClasses import ItemClassification
 from .Locations import level_locations, all_level_locations, standard_level_locations, shop_locations
-from .Options import TriforceLocations, StartingPosition
+from .Options import ShuffleStartingSword, ShuffleWhiteSword, ShuffleMagicalSword, TriforceLocations, \
+    StartingWeaponPosition
 
 # Swords are in starting_weapons
 overworld_items = {
@@ -64,9 +65,9 @@ basic_pool = {
     for item in set(overworld_items) | set(shop_items) | set(major_dungeon_items) | set(map_compass_replacements)
 }
 
-starting_weapons = ["Sword", "White Sword", "Magical Sword", "Magical Rod", "Red Candle"]
+possible_starting_weapons = ["Sword", "White Sword", "Magical Sword", "Magical Rod", "Red Candle"]
 guaranteed_shop_items = ["Small Key", "Bomb", "Water of Life (Red)", "Arrow"]
-starting_weapon_locations = ["Starting Sword Cave", "Letter Cave", "Armos Knights"]
+possible_starting_weapon_locations = ["Starting Sword Cave", "Letter Cave", "Armos Knights"]
 dangerous_weapon_locations = [
     "Level 1 Compass", "Level 2 Bomb Drop (Keese)", "Level 3 Key Drop (Zols Entrance)", "Level 3 Compass"]
 
@@ -91,20 +92,31 @@ def get_pool_core(world):
     for location, item in zip(reserved_store_slots, guaranteed_shop_items):
         placed_items[location] = item
 
-    # Starting Weapon
-    start_weapon_locations = starting_weapon_locations.copy()
-    starting_weapon = random.choice(starting_weapons)
-    if world.multiworld.StartingPosition[world.player] == StartingPosition.option_safe:
-        placed_items[start_weapon_locations[0]] = starting_weapon
-    elif world.multiworld.StartingPosition[world.player] in \
-            [StartingPosition.option_unsafe, StartingPosition.option_dangerous]:
-        if world.multiworld.StartingPosition[world.player] == StartingPosition.option_dangerous:
-            for location in dangerous_weapon_locations:
-                if world.multiworld.ExpandedPool[world.player] or "Drop" not in location:
-                    start_weapon_locations.append(location)
-        placed_items[random.choice(start_weapon_locations)] = starting_weapon
+    # Determine and place starting weapon and sword locations
+    starting_weapons = possible_starting_weapons.copy()
+    if not world.multiworld.ShuffleWhiteSword[world.player]:
+        starting_weapons.remove("White Sword")
+        placed_items["White Sword Pond"] = "White Sword"
+    if not world.multiworld.ShuffleMagicalSword[world.player]:
+        starting_weapons.remove("Magical Sword")
+        placed_items["Magical Sword Grave"] = "Magical Sword"
+    if world.multiworld.ShuffleStartingSword[world.player]:
+        start_weapon_locations = possible_starting_weapon_locations.copy()
+        starting_weapon = random.choice(starting_weapons)
+        if world.multiworld.StartingWeaponPosition[world.player] == StartingWeaponPosition.option_safe:
+            placed_items[start_weapon_locations[0]] = starting_weapon
+        elif world.multiworld.StartingWeaponPosition[world.player] in \
+                [StartingWeaponPosition.option_unsafe, StartingWeaponPosition.option_dangerous]:
+            if world.multiworld.StartingWeaponPosition[world.player] == StartingWeaponPosition.option_dangerous:
+                for location in dangerous_weapon_locations:
+                    if world.multiworld.ExpandedPool[world.player] or "Drop" not in location:
+                        start_weapon_locations.append(location)
+            placed_items[random.choice(start_weapon_locations)] = starting_weapon
+        else:
+            pool.append(starting_weapon)
     else:
-        pool.append(starting_weapon)
+        starting_weapon = "Sword"
+        placed_items["Starting Sword Cave"] = starting_weapon
     for other_weapons in starting_weapons:
         if other_weapons != starting_weapon:
             pool.append(other_weapons)

@@ -1,13 +1,10 @@
 from BaseClasses import ItemClassification
 from .Locations import level_locations, all_level_locations, standard_level_locations, shop_locations
-from .Options import ShuffleStartingSword, ShuffleWhiteSword, ShuffleMagicalSword, TriforceLocations, \
-    StartingWeaponPosition
+from .Options import TriforceLocations, StartingWeaponPosition
 
 # Swords are in starting_weapons
 overworld_items = {
     "Letter": 1,
-    "Power Bracelet": 1,
-    "Heart Container": 1,
     "Sword": 1
 }
 
@@ -107,6 +104,11 @@ def get_pool_core(world):
             placed_items[start_weapon_locations[0]] = starting_weapon
         elif world.multiworld.StartingWeaponPosition[world.player] in \
                 [StartingWeaponPosition.option_unsafe, StartingWeaponPosition.option_dangerous]:
+            if not world.multiworld.ShuffleArmosItem[world.player]:
+                placed_items["Armos Knights"] = "Power Bracelet"
+                start_weapon_locations.remove("Armos Knights")
+            else:
+                pool.append("Power Bracelet")
             if world.multiworld.StartingWeaponPosition[world.player] == StartingWeaponPosition.option_dangerous:
                 for location in dangerous_weapon_locations:
                     if world.multiworld.ExpandedPool[world.player] or "Drop" not in location:
@@ -120,6 +122,12 @@ def get_pool_core(world):
     for other_weapons in starting_weapons:
         if other_weapons != starting_weapon:
             pool.append(other_weapons)
+
+    # Ocean Heart
+    if not world.multiworld.ShuffleOceanHeart[world.player]:
+        placed_items["Ocean Heart Container"] = "Heart Container"
+    else:
+        pool.append("Heart Container")
 
     # Triforce Fragments
     fragment = "Triforce Fragment"

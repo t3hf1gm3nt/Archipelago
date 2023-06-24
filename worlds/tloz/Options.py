@@ -8,18 +8,28 @@ class ExpandedPool(DefaultOnToggle):
 
 
 class ShuffleStartingSword(DefaultOnToggle):
-    """Shuffles Wood Sword into the item pool"""
+    """Shuffles Wood Sword into the item pool."""
     display_name = "Shuffle Starting Sword"
 
 
 class ShuffleWhiteSword(DefaultOnToggle):
-    """Shuffle White Sword into the item pool"""
+    """Shuffle White Sword into the item pool."""
     display_name = "Shuffle White Sword"
 
 
 class ShuffleMagicalSword(DefaultOnToggle):
-    """Shuffle Magical Sword into the item pool"""
+    """Shuffle Magical Sword into the item pool."""
     display_name = "Shuffle Magical Sword"
+
+
+class ShuffleOceanHeart(DefaultOnToggle):
+    """Shuffles the Heart Container on the East Ocean."""
+    display_name = "Shuffle Ocean Heart"
+
+
+class ShuffleArmosItem(DefaultOnToggle):
+    """Shuffles the Power Bracelet at Armos Knights."""
+    display_name = "Shuffle Armos Item"
 
 
 class TriforceLocations(Choice):
@@ -37,7 +47,8 @@ class StartingWeaponPosition(Choice):
     *Note that if ShuffleStartingSword is off, this option is ignored
 
     Safe means a weapon is guaranteed in Starting Sword Cave.
-    Unsafe means that a weapon is guaranteed between Starting Sword Cave, Letter Cave, and Armos Knight.
+    Unsafe means that a weapon is guaranteed between Starting Sword Cave, Letter Cave, and Armos Knights
+    if it is shuffled.
     Dangerous adds these level locations to the unsafe pool (if they exist):
 #       Level 1 Compass, Level 2 Bomb Drop (Keese), Level 3 Key Drop (Zols Entrance), Level 3 Compass
     Very Dangerous is the same as dangerous except it doesn't guarantee a weapon. It will only mean progression
@@ -55,6 +66,8 @@ tloz_options: typing.Dict[str, type(Option)] = {
     "ShuffleStartingSword": ShuffleStartingSword,
     "ShuffleWhiteSword": ShuffleWhiteSword,
     "ShuffleMagicalSword": ShuffleMagicalSword,
+    "ShuffleOceanHeart": ShuffleOceanHeart,
+    "ShuffleArmosItem": ShuffleArmosItem,
     "TriforceLocations": TriforceLocations,
     "StartingWeaponPosition": StartingWeaponPosition
 }

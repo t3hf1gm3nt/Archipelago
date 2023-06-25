@@ -91,24 +91,26 @@ def get_pool_core(world):
 
     # Determine and place starting weapon and sword locations
     starting_weapons = possible_starting_weapons.copy()
+    start_weapon_locations = possible_starting_weapon_locations.copy()
+    # Check if certain items or locations are valid based on player options
+    if not world.multiworld.ShuffleArmosItem[world.player]:
+        placed_items["Armos Knights"] = "Power Bracelet"
+        start_weapon_locations.remove("Armos Knights")
+    else:
+        pool.append("Power Bracelet")
     if not world.multiworld.ShuffleWhiteSword[world.player]:
         starting_weapons.remove("White Sword")
         placed_items["White Sword Pond"] = "White Sword"
     if not world.multiworld.ShuffleMagicalSword[world.player]:
         starting_weapons.remove("Magical Sword")
         placed_items["Magical Sword Grave"] = "Magical Sword"
+    # Only run if Starting Sword is shuffled
     if world.multiworld.ShuffleStartingSword[world.player]:
-        start_weapon_locations = possible_starting_weapon_locations.copy()
         starting_weapon = random.choice(starting_weapons)
         if world.multiworld.StartingWeaponPosition[world.player] == StartingWeaponPosition.option_safe:
             placed_items[start_weapon_locations[0]] = starting_weapon
         elif world.multiworld.StartingWeaponPosition[world.player] in \
                 [StartingWeaponPosition.option_unsafe, StartingWeaponPosition.option_dangerous]:
-            if not world.multiworld.ShuffleArmosItem[world.player]:
-                placed_items["Armos Knights"] = "Power Bracelet"
-                start_weapon_locations.remove("Armos Knights")
-            else:
-                pool.append("Power Bracelet")
             if world.multiworld.StartingWeaponPosition[world.player] == StartingWeaponPosition.option_dangerous:
                 for location in dangerous_weapon_locations:
                     if world.multiworld.ExpandedPool[world.player] or "Drop" not in location:

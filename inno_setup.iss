@@ -84,6 +84,8 @@ Type: files; Name: "{app}\lib\worlds\_bizhawk.apworld"
 Type: files; Name: "{app}\ArchipelagoLttPClient.exe"
 Type: files; Name: "{app}\ArchipelagoPokemonClient.exe"
 Type: files; Name: "{app}\data\lua\connector_pkmn_rb.lua"
+Type: files; Name: "{app}\ArchipelagoZelda1Client.exe"
+Type: files; Name: "{app}\data\lua\connector_tloz.lua"
 Type: filesandordirs; Name: "{app}\lib\worlds\rogue-legacy*"
 Type: filesandordirs; Name: "{app}\SNI\lua*"
 Type: filesandordirs; Name: "{app}\EnemizerCLI*"
@@ -168,8 +170,8 @@ Root: HKCR; Subkey: "{#MyAppName}ladxpatch\shell\open\command";  ValueData: """{
 
 Root: HKCR; Subkey: ".aptloz";                                   ValueData: "{#MyAppName}tlozpatch";        Flags: uninsdeletevalue; ValueType: string;  ValueName: "";
 Root: HKCR; Subkey: "{#MyAppName}tlozpatch";                     ValueData: "Archipelago The Legend of Zelda Patch"; Flags: uninsdeletekey;   ValueType: string;  ValueName: "";
-Root: HKCR; Subkey: "{#MyAppName}tlozpatch\DefaultIcon";         ValueData: "{app}\ArchipelagoZelda1Client.exe,0";                           ValueType: string;  ValueName: "";
-Root: HKCR; Subkey: "{#MyAppName}tlozpatch\shell\open\command";  ValueData: """{app}\ArchipelagoZelda1Client.exe"" ""%1""";                  ValueType: string;  ValueName: "";
+Root: HKCR; Subkey: "{#MyAppName}tlozpatch\DefaultIcon";         ValueData: "{app}\ArchipelagoBizHawkClient.exe,0";                           ValueType: string;  ValueName: "";
+Root: HKCR; Subkey: "{#MyAppName}tlozpatch\shell\open\command";  ValueData: """{app}\ArchipelagoBizHawkClient.exe"" ""%1""";                  ValueType: string;  ValueName: "";
 
 Root: HKCR; Subkey: ".apadvn";                                   ValueData: "{#MyAppName}advnpatch";        Flags: uninsdeletevalue; ValueType: string;  ValueName: "";
 Root: HKCR; Subkey: "{#MyAppName}advnpatch";                     ValueData: "Archipelago Adventure Patch";  Flags: uninsdeletekey;   ValueType: string;  ValueName: "";

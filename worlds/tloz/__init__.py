@@ -18,7 +18,7 @@ from .Rom import TLoZDeltaPatch, get_base_rom_path, first_quest_dungeon_items_ea
 from .Rules import set_rules
 from worlds.AutoWorld import World, WebWorld
 from worlds.generic.Rules import add_rule
-
+from .Client import TLOZClient
 
 class TLoZSettings(settings.Group):
     class RomFile(settings.UserFilePath):
